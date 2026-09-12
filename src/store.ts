@@ -52,6 +52,8 @@ async function persistAccount(a: Account) {
   await db.accounts.put(a);
 }
 
+let initPromise: Promise<void> | null = null;
+
 export const useStore = create<AppState>((set, get) => ({
   ready: false,
   tiers: [1, 5, 10],
@@ -59,27 +61,31 @@ export const useStore = create<AppState>((set, get) => ({
   accounts: [],
   activeAccountId: null,
 
-  init: async () => {
-    let settings = await db.settings.get("app");
-    let accounts = await db.accounts.toArray();
+  init: () => {
+    if (initPromise) return initPromise;
+    initPromise = (async () => {
+      let settings = await db.settings.get("app");
+      let accounts = await db.accounts.toArray();
 
-    if (!settings || accounts.length === 0) {
-      const template = settings?.template ?? seedTemplate();
-      const tiers = settings?.tiers ?? [1, 5, 10];
-      const seeded = accounts.length > 0 ? accounts : [logic.newAccount("Main", template)];
-      settings = { id: "app", tiers, template, activeAccountId: seeded[0].id };
-      accounts = seeded;
-      await db.settings.put(settings);
-      await Promise.all(accounts.map((a) => db.accounts.put(a)));
-    }
+      if (!settings || accounts.length === 0) {
+        const template = settings?.template ?? seedTemplate();
+        const tiers = settings?.tiers ?? [1, 5, 10];
+        const seeded = accounts.length > 0 ? accounts : [logic.newAccount("Main", template)];
+        settings = { id: "app", tiers, template, activeAccountId: seeded[0].id };
+        accounts = seeded;
+        await db.settings.put(settings);
+        await Promise.all(accounts.map((a) => db.accounts.put(a)));
+      }
 
-    set({
-      ready: true,
-      tiers: settings.tiers,
-      template: settings.template,
-      accounts,
-      activeAccountId: settings.activeAccountId ?? accounts[0]?.id ?? null,
-    });
+      set({
+        ready: true,
+        tiers: settings.tiers,
+        template: settings.template,
+        accounts,
+        activeAccountId: settings.activeAccountId ?? accounts[0]?.id ?? null,
+      });
+    })();
+    return initPromise;
   },
 
   activeAccount: () => {
