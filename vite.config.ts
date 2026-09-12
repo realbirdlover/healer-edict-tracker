@@ -5,6 +5,7 @@ import { defineConfig } from "vitest/config";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: process.env.GITHUB_PAGES === "true" ? "/healer-edict-tracker/" : "/",
   plugins: [
     react(),
     tailwindcss(),
@@ -18,7 +19,8 @@ export default defineConfig({
         theme_color: "#161A20",
         background_color: "#161A20",
         display: "standalone",
-        start_url: "/",
+        start_url: ".",
+        scope: ".",
         icons: [
           { src: "icon-192.svg", sizes: "192x192", type: "image/svg+xml", purpose: "any" },
           { src: "icon-512.svg", sizes: "512x512", type: "image/svg+xml", purpose: "any" },

@@ -7,7 +7,12 @@ template and tier thresholds.
 All data is stored locally in the browser (IndexedDB) — there is no server and no account system.
 Each machine/browser you run this on keeps its own separate data.
 
-## Running it
+## Just want to use it?
+
+Open **https://realbirdlover.github.io/healer-edict-tracker/** — no install needed. Click the
+install icon in the address bar (Chrome/Edge) to add it as a desktop app for offline use.
+
+## Running it from source
 
 Requires [Node.js](https://nodejs.org) 20+ (which includes npm).
 
