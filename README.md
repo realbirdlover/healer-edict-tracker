@@ -1,32 +1,42 @@
-# React + TypeScript + Vite
+# Healer Edict Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A single-page PWA for tracking Rogue Lineage Healer Edict progress across wipes: Gaia and Khei
+checklists, wipe history with frozen snapshots, multiple accounts, and an editable checklist
+template and tier thresholds.
 
-Currently, two official plugins are available:
+All data is stored locally in the browser (IndexedDB) — there is no server and no account system.
+Each machine/browser you run this on keeps its own separate data.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Running it
 
-## React Compiler
+Requires [Node.js](https://nodejs.org) 20+ (which includes npm).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Then open the URL it prints (usually `http://localhost:5173`).
+
+## Installing it as a desktop app
+
+For offline use / a standalone window instead of a browser tab:
+
+```bash
+npm run build
+npm run preview
+```
+
+Open the printed URL in Chrome or Edge, then click the install icon in the address bar (or the
+browser's menu → "Install Healer Edict Tracker"). This installs a real desktop app backed by the
+same local IndexedDB storage — it keeps working without the terminal open, but it's still local
+to that machine.
+
+## Testing
+
+```bash
+npx vitest run
+```
+
+Covers the data layer: wipe archiving, counter math, template reset, and that editing the
+template after a wipe never rewrites an already-archived history snapshot.
